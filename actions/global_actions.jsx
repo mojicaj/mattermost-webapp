@@ -14,6 +14,7 @@ import {
     selectChannel,
 } from 'mattermost-redux/actions/channels';
 import {getPostThread} from 'mattermost-redux/actions/posts';
+import {logout} from 'mattermost-redux/actions/users';
 import {Client4} from 'mattermost-redux/client';
 import {getConfig} from 'mattermost-redux/selectors/entities/general';
 import {getCurrentTeamId} from 'mattermost-redux/selectors/entities/teams';
@@ -431,19 +432,15 @@ export function emitRemoteUserTypingEvent(channelId, userId, postParentId) {
 }
 
 export function emitUserLoggedOutEvent(redirectTo = '/', shouldSignalLogout = true) {
-    Client4.logout().then(
-        () => {
-            if (shouldSignalLogout) {
-                BrowserStore.signalLogout();
-            }
+    dispatch(logout()).then(() => {
+        if (shouldSignalLogout) {
+            BrowserStore.signalLogout();
+        }
 
-            clientLogout(redirectTo);
-        }
-    ).catch(
-        () => {
-            browserHistory.push(redirectTo);
-        }
-    );
+        clientLogout(redirectTo);
+    }).catch(() => {
+        browserHistory.push(redirectTo);
+    });
 }
 
 export function clientLogout(redirectTo = '/') {
