@@ -15,6 +15,9 @@ import {
 } from 'actions/admin_actions';
 import SystemAnalytics from 'components/analytics/system_analytics';
 import TeamAnalytics from 'components/analytics/team_analytics';
+import PluginManagement from 'components/admin_console/plugin_management';
+import CustomPluginSettings from 'components/admin_console/custom_plugin_settings';
+
 import {trackEvent} from 'actions/diagnostics_actions.jsx';
 
 import Audits from './audits';
@@ -506,6 +509,16 @@ export default {
                                     display_name_default: 'Show first and last name',
                                 },
                             ],
+                        },
+                        {
+                            type: Constants.SettingsTypes.TYPE_PERMISSION,
+                            key: 'TeamSettings.EditOthersPosts',
+                            label: t('admin.team.editOthersPostsTitle'),
+                            label_default: 'Allow Team Administrators to edit others posts:',
+                            help_text: t('admin.team.editOthersPostsDesc'),
+                            help_text_default: 'When true, Team Administrators and System Administrators can edit other user\'s posts.  When false, only System Administrators can edit other user\'s posts.',
+                            permissions_mapping_name: 'editOthersPosts',
+                            isHidden: needsUtils.hasLicense,
                         },
                         {
                             type: Constants.SettingsTypes.TYPE_BOOL,
@@ -2190,6 +2203,18 @@ export default {
                     ],
                 },
             },
+            management: {
+                schema: {
+                    id: 'PluginManagementSettings',
+                    component: PluginManagement,
+                },
+            },
+            custom: {
+                schema: {
+                    id: 'CustomPluginSettings',
+                    component: CustomPluginSettings,
+                },
+            },
         },
         files: {
             storage: {
@@ -2460,6 +2485,65 @@ export default {
                             help_text_default: 'Text that will appear below your custom brand image on your login screen. Supports Markdown-formatted text. Maximum 500 characters allowed.',
                             isDisabled: needsUtils.stateValueFalse('TeamSettings.EnableCustomBrand'),
                             max_length: Constants.MAX_CUSTOM_BRAND_TEXT_LENGTH,
+                        },
+                    ],
+                },
+            },
+            emoji: {
+                schema: {
+                    id: 'EmojiSettings',
+                    name: t('admin.customization.emoji'),
+                    name_default: 'Emoji',
+                    settings: [
+                        {
+                            type: Constants.SettingsTypes.TYPE_BOOL,
+                            key: 'ServiceSettings.EnableEmojiPicker',
+                            label: t('admin.customization.enableEmojiPickerTitle'),
+                            label_default: 'Enable Emoji Picker:',
+                            help_text: t('admin.customization.enableEmojiPickerDesc'),
+                            help_text_default: 'The emoji picker allows users to select emoji to add as reactions or use in messages. Enabling the emoji picker with a large number of custom emoji may slow down performance.',
+                        },
+                        {
+                            type: Constants.SettingsTypes.TYPE_BOOL,
+                            key: 'ServiceSettings.EnableCustomEmoji',
+                            label: t('admin.customization.enableCustomEmojiTitle'),
+                            label_default: 'Enable Custom Emoji:',
+                            help_text: t('admin.customization.enableCustomEmojiDesc'),
+                            help_text_default: 'Enable users to create custom emoji for use in messages. When enabled, Custom Emoji settings can be accessed by switching to a team and clicking the three dots above the channel sidebar, and selecting "Custom Emoji".',
+                        },
+                    ],
+                },
+            },
+            gif: {
+                schema: {
+                    id: 'EmojiSettings',
+                    name: t('admin.customization.'),
+                    name_default: 'GIF (Beta)',
+                    settings: [
+                        {
+                            type: Constants.SettingsTypes.TYPE_BOOL,
+                            key: 'ServiceSettings.EnableGifPicker',
+                            label: t('admin.customization.enableGifPickerTitle'),
+                            label_default: 'Enable GIF Picker:',
+                            help_text: t('admin.customization.enableGifPickerDesc'),
+                            help_text_default: 'Allow users to select GIFs from the emoji picker via a Gfycat integration.',
+                        },
+                        {
+                            type: Constants.SettingsTypes.TYPE_TEXT,
+                            key: 'ServiceSettings.GfycatApiKey',
+                            label: t('admin.customization.gfycatApiKey'),
+                            label_default: 'Gfycat API Key:',
+                            help_text: t('admin.customization.gfycatApiKeyDescription'),
+                            help_text_default: 'Request an API key at [https://developers.gfycat.com/signup/#](!https://developers.gfycat.com/signup/#). Enter the client ID you receive via email to this field. When blank, uses the default API key provided by Gfycat.',
+                            help_text_markdown: true,
+                        },
+                        {
+                            type: Constants.SettingsTypes.TYPE_TEXT,
+                            key: 'ServiceSettings.GfycatApiSecret',
+                            label: t('admin.customization.gfycatApiSecret'),
+                            label_default: 'Gfycat API Secret:',
+                            help_text: t('admin.customization.gfycatApiSecretDescription'),
+                            help_text_default: 'The API secret generated by Gfycat for your API key. When blank, uses the default API secret provided by Gfycat.',
                         },
                     ],
                 },
